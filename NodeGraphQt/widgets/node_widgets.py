@@ -155,7 +155,6 @@ class NodeComboBox(NodeBaseWidget):
         `To embed a ``QComboBox`` in a node see func:`
         :meth:`NodeGraphQt.BaseNode.add_combo_menu`
     """
-
     def __init__(self, parent=None, name='', label='', items=None):
         super(NodeComboBox, self).__init__(parent, name, label)
         self.setZValue(Z_VAL_NODE_WIDGET + 1)
@@ -167,6 +166,15 @@ class NodeComboBox(NodeBaseWidget):
         list_view.setStyleSheet(STYLE_QLISTVIEW)
         self._combo.setView(list_view)
         self._combo.clearFocus()
+
+        self._combo.setEditable(True)
+        qcompleter = QtWidgets.QCompleter(items, self.widget.parent())
+        qcompleter.setCaseSensitivity(QtCore.Qt.CaseInsensitive)
+        qcompleter.setCompletionMode(QtWidgets.QCompleter.PopupCompletion)
+        qcompleter.setFilterMode(QtCore.Qt.MatchContains)
+        qcompleter.setModelSorting(QtWidgets.QCompleter.CaseInsensitivelySortedModel)
+        self._combo.setCompleter(qcompleter)
+
         self.add_items(items)
         group = _NodeGroupBox(label)
         group.add_node_widget(self._combo)
